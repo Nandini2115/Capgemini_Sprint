@@ -1,6 +1,8 @@
+
 package com.swaglabs;
 
 import java.time.Duration;
+import java.util.Locale;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,51 +14,72 @@ import baseclass.CommonData;
 
 public class ProductPage {
 
-    WebDriver driver;
-    WebDriverWait wait;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
     public ProductPage(WebDriver driver) {
+        if (driver == null) {
+            throw new IllegalArgumentException(
+                "WebDriver cannot be null"
+            );
+        }
+
         this.driver = driver;
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        this.wait = new WebDriverWait(
+            driver, Duration.ofSeconds(15)
+        );
     }
 
     private String getProductId() {
         String productName = CommonData.get("productName");
-        return productName.toLowerCase().replace(" ", "-");
+
+        if (productName == null || productName.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                "productName is missing in CommonData.properties"
+            );
+        }
+
+        return productName.trim()
+            .toLowerCase(Locale.ROOT)
+            .replaceAll("\\s+", "-");
     }
 
     public void addBackpack() {
         String productId = getProductId();
+
         By addButton = By.id("add-to-cart-" + productId);
+        By removeButton = By.id("remove-" + productId);
 
         wait.until(
             ExpectedConditions.elementToBeClickable(addButton)
         ).click();
 
         wait.until(
-            ExpectedConditions.elementToBeClickable(
-                By.id("remove-" + productId)
-            )
+            ExpectedConditions.visibilityOfElementLocated(removeButton)
         );
 
-        Reporter.log("Backpack added to cart successfully", true);
+        Reporter.log(
+            productId + " added to cart successfully", true
+        );
     }
 
     public void removeBackpack() {
         String productId = getProductId();
+
         By removeButton = By.id("remove-" + productId);
+        By addButton = By.id("add-to-cart-" + productId);
 
         wait.until(
             ExpectedConditions.elementToBeClickable(removeButton)
         ).click();
 
         wait.until(
-            ExpectedConditions.elementToBeClickable(
-                By.id("add-to-cart-" + productId)
-            )
+            ExpectedConditions.visibilityOfElementLocated(addButton)
         );
 
-        Reporter.log("Backpack removed from cart successfully", true);
+        Reporter.log(
+            productId + " removed from cart successfully", true
+        );
     }
 
     public void clickCart() {
@@ -67,7 +90,7 @@ public class ProductPage {
         ).click();
 
         wait.until(
-            ExpectedConditions.urlContains("cart")
+            ExpectedConditions.urlContains("cart.html")
         );
 
         Reporter.log("Shopping cart opened successfully", true);
@@ -75,10 +98,12 @@ public class ProductPage {
 
     public boolean isProductPageDisplayed() {
         boolean displayed = wait.until(
-            ExpectedConditions.urlContains("inventory")
+            ExpectedConditions.urlContains("inventory.html")
         );
 
-        Reporter.log("Product inventory page displayed: " + displayed, true);
+        Reporter.log(
+            "Product inventory page displayed: " + displayed, true
+        );
 
         return displayed;
     }

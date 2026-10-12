@@ -31,8 +31,8 @@ public class CheckoutPage1 {
     @FindBy(id = "continue")
     private WebElement continueButton;
 
-    @FindBy(css = "[data-test='error']")
-    private WebElement errorMessage;
+    private final By errorLocator =
+        By.cssSelector("[data-test='error']");
 
     public CheckoutPage1(WebDriver driver) {
         if (driver == null) {
@@ -49,13 +49,15 @@ public class CheckoutPage1 {
         PageFactory.initElements(driver, this);
     }
 
-    // Enter checkout customer information from properties
+    // Enter customer details from CommonData.properties
     public void enterDetails() {
         enterValue(firstNameField, CommonData.get("firstName"));
         enterValue(lastNameField, CommonData.get("lastName"));
         enterValue(postalCodeField, CommonData.get("postalCode"));
 
-        Reporter.log("Checkout details entered successfully", true);
+        Reporter.log(
+            "Checkout customer details entered successfully", true
+        );
     }
 
     private void enterValue(WebElement element, String value) {
@@ -65,28 +67,36 @@ public class CheckoutPage1 {
             );
         }
 
-        wait.until(ExpectedConditions.visibilityOf(element));
+        wait.until(
+            ExpectedConditions.visibilityOf(element)
+        );
+
         element.clear();
         element.sendKeys(value);
     }
 
-    // Submit checkout information
+    // Submit customer information
     public void clickContinue() {
         wait.until(
             ExpectedConditions.elementToBeClickable(continueButton)
         ).click();
 
-        wait.until(d ->
-            d.getCurrentUrl().contains("checkout-step-two.html")
-            || !d.findElements(
-                By.cssSelector("[data-test='error']")
-            ).isEmpty()
-        );
+        try {
+            wait.until(d ->
+                d.getCurrentUrl().contains("checkout-step-two.html")
+                || !d.findElements(errorLocator).isEmpty()
+            );
+        } catch (org.openqa.selenium.TimeoutException e) {
+            throw new AssertionError(
+                "Checkout did not advance and no validation error "
+                + "was detected."
+                + "\nCurrent URL: " + driver.getCurrentUrl()
+                + "\nPage title: " + driver.getTitle(),
+                e
+            );
+        }
 
-        String currentUrl = driver.getCurrentUrl();
-        System.out.println("URL after Continue: " + currentUrl);
-
-        if (currentUrl.contains("checkout-step-two.html")) {
+        if (driver.getCurrentUrl().contains("checkout-step-two.html")) {
             Reporter.log(
                 "Checkout information submitted successfully", true
             );
@@ -98,7 +108,7 @@ public class CheckoutPage1 {
             );
 
             throw new AssertionError(
-                "Checkout did not proceed. Validation message: " + message
+                "Checkout did not proceed: " + message
             );
         }
     }
@@ -117,9 +127,7 @@ public class CheckoutPage1 {
         ).click();
 
         String message = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("[data-test='error']")
-            )
+            ExpectedConditions.visibilityOfElementLocated(errorLocator)
         ).getText();
 
         Reporter.log(
@@ -128,16 +136,12 @@ public class CheckoutPage1 {
     }
 
     public boolean isErrorDisplayed() {
-        return !driver.findElements(
-            By.cssSelector("[data-test='error']")
-        ).isEmpty();
+        return !driver.findElements(errorLocator).isEmpty();
     }
 
     public String getErrorMessage() {
         return wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("[data-test='error']")
-            )
+            ExpectedConditions.visibilityOfElementLocated(errorLocator)
         ).getText();
     }
 
