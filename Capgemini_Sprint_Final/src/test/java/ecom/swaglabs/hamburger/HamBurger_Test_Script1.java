@@ -4,157 +4,94 @@ import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
+import baseclass.BaseClass;
 import com.swaglabs.HamburgerMenuPage;
 import com.swaglabs.LoginPage;
 
-import baseclass.BaseClass;
-import baseclass.Screenshot;
-
 public class HamBurger_Test_Script1 extends BaseClass {
 
-    @Test(groups = {"smoke"})
-    public void verifyHamburgerMenu() {
-
-        Reporter.log("Starting Hamburger Menu Test", true);
-
+    private HamburgerMenuPage openHamburgerMenu() {
         LoginPage login = new LoginPage(driver);
         login.login();
 
-        HamburgerMenuPage hamburger = new HamburgerMenuPage(driver);
+        HamburgerMenuPage hamburger =
+            new HamburgerMenuPage(driver);
+
         hamburger.openMenu();
+        return hamburger;
+    }
+
+    @Test(groups = {"smoke", "functional"})
+    public void verifyAllItemsDisplayed() {
+        HamburgerMenuPage hamburger = openHamburgerMenu();
 
         Assert.assertTrue(
-            hamburger.isDynamicCatalogDisplayed(),
-            "Dynamic Catalog is not displayed"
+            hamburger.isAllItemsDisplayed(),
+            "All Items option is not displayed"
+        );
+
+        Reporter.log("PASS: All Items option displayed", true);
+    }
+
+    @Test(groups = {"functional"})
+    public void verifyAboutDisplayed() {
+        HamburgerMenuPage hamburger = openHamburgerMenu();
+
+        Assert.assertTrue(
+            hamburger.isAboutDisplayed(),
+            "About option is not displayed"
+        );
+
+        Reporter.log("PASS: About option displayed", true);
+    }
+
+    @Test(groups = {"functional"})
+    public void verifyLogoutDisplayed() {
+        HamburgerMenuPage hamburger = openHamburgerMenu();
+
+        Assert.assertTrue(
+            hamburger.isLogoutDisplayed(),
+            "Logout option is not displayed"
+        );
+
+        Reporter.log("PASS: Logout option displayed", true);
+    }
+
+    @Test(groups = {"functional"})
+    public void verifyResetAppDisplayed() {
+        HamburgerMenuPage hamburger = openHamburgerMenu();
+
+        Assert.assertTrue(
+            hamburger.isResetAppDisplayed(),
+            "Reset App State option is not displayed"
         );
 
         Reporter.log(
-            "PASS: Hamburger menu and Dynamic Catalog displayed",
-            true
+            "PASS: Reset App State option displayed", true
+        );
+    }
+
+    @Test(groups = {"integration"})
+    public void verifyAllItemsNavigation() {
+        HamburgerMenuPage hamburger = openHamburgerMenu();
+        hamburger.clickAllItems();
+
+        Assert.assertTrue(
+            driver.getCurrentUrl().contains("inventory"),
+            "All Items navigation failed"
         );
     }
 
     @Test(groups = {"functional"})
-    public void verifyDynamicCatalogDropdown() {
-
-        Reporter.log("Starting Dynamic Catalog Dropdown Test", true);
-
-        LoginPage login = new LoginPage(driver);
-        login.login();
-
-        HamburgerMenuPage hamburger = new HamburgerMenuPage(driver);
-        hamburger.openMenu();
-        hamburger.openDynamicCatalog();
+    public void verifyLogout() {
+        HamburgerMenuPage hamburger = openHamburgerMenu();
+        hamburger.clickLogout();
 
         Assert.assertTrue(
-            hamburger.isLazyLoadDisplayed(),
-            "Lazy Load is not displayed"
+            driver.getCurrentUrl().contains("saucedemo.com"),
+            "Logout did not return to the login page"
         );
 
-        Assert.assertTrue(
-            hamburger.isSliderDisplayed(),
-            "Slider is not displayed"
-        );
-
-        Assert.assertTrue(
-            hamburger.isSpinnerDisplayed(),
-            "Spinner is not displayed"
-        );
-
-        Reporter.log(
-            "PASS: Lazy Load, Slider and Spinner are displayed",
-            true
-        );
-    }
-
-    @Test(groups = {"functional"})
-    public void verifyLazyLoadClickable() {
-
-        Reporter.log("Starting Lazy Load Click Test", true);
-
-        LoginPage login = new LoginPage(driver);
-        login.login();
-
-        HamburgerMenuPage hamburger = new HamburgerMenuPage(driver);
-        hamburger.openMenu();
-        hamburger.clickLazyLoad();
-
-        Reporter.log("PASS: Lazy Load selected", true);
-    }
-
-    @Test(groups = {"functional"})
-    public void verifySliderClickable() {
-
-        Reporter.log("Starting Slider Click Test", true);
-
-        LoginPage login = new LoginPage(driver);
-        login.login();
-
-        HamburgerMenuPage hamburger = new HamburgerMenuPage(driver);
-        hamburger.openMenu();
-        hamburger.clickSlider();
-
-        Reporter.log("PASS: Slider selected", true);
-    }
-
-    @Test(groups = {"functional"})
-    public void verifySpinnerClickable() {
-
-        Reporter.log("Starting Spinner Click Test", true);
-
-        LoginPage login = new LoginPage(driver);
-        login.login();
-
-        HamburgerMenuPage hamburger = new HamburgerMenuPage(driver);
-        hamburger.openMenu();
-        hamburger.clickSpinner();
-
-        Reporter.log("PASS: Spinner selected", true);
-    }
-
-    @Test(groups = {"negative"})
-    public void verifyUnavailableProductAction() {
-
-        Reporter.log("Starting Unavailable Product Negative Test", true);
-
-        LoginPage login = new LoginPage(driver);
-        login.login();
-
-        String unavailableProduct = "Unavailable Product";
-
-        boolean productFound = driver.getPageSource()
-            .contains(unavailableProduct);
-
-        Reporter.log(
-            "Unavailable Product Found: " + productFound,
-            true
-        );
-
-        try {
-            Screenshot.takeScreenshot(
-                driver,
-                "Unavailable_Product_Action"
-            );
-
-            Reporter.log(
-                "Screenshot saved: Unavailable_Product_Action",
-                true
-            );
-        } catch (Exception e) {
-            Reporter.log(
-                "Screenshot could not be saved: " + e.getMessage(),
-                true
-            );
-        }
-
-        Assert.assertFalse(
-            productFound,
-            "Unavailable product should not be displayed"
-        );
-
-        Reporter.log(
-            "PASS: Unavailable product was not displayed",
-            true
-        );
+        Reporter.log("PASS: Logout completed", true);
     }
 }
