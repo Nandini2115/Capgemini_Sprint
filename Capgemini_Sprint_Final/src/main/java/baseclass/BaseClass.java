@@ -9,16 +9,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.JavascriptExecutor;
-
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
-
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -40,36 +36,34 @@ public class BaseClass {
 
     @BeforeSuite(alwaysRun = true)
     public void beforeSuite() {
-        Reporter.log("Test Suite Started", true);
+        logReport("Test Suite Started");
     }
 
     @BeforeTest(alwaysRun = true)
     public void beforeTest() {
-        Reporter.log("Test Started", true);
+        logReport("Test Started");
     }
 
     @BeforeClass(alwaysRun = true)
     public void beforeClass() {
-        Reporter.log("Test Class Started", true);
+        logReport("Test Class Started");
     }
 
     @Parameters("browser")
     @BeforeMethod(alwaysRun = true)
     public void setUp(@Optional("chrome") String browser) {
 
-        Reporter.log("Browser selected: " + browser, true);
+        logReport("Browser selected: " + browser);
 
         try {
-
             if (browser.equalsIgnoreCase("chrome")) {
 
                 ChromeOptions options = new ChromeOptions();
 
-                Map<String, Object> preferences = new HashMap<>();
-                preferences.put("profile.password_manager_leak_detection",false);
+                Map<String, Object> prefs = new HashMap<>();
+                prefs.put("profile.password_manager_leak_detection", false);
+                options.setExperimentalOption("prefs", prefs);
 
-                options.setExperimentalOption("prefs", preferences);
-                options.addArguments("--headless=new");
                 options.addArguments("--disable-gpu");
                 options.addArguments("--window-size=1920,1080");
 
@@ -79,7 +73,7 @@ public class BaseClass {
 
                 EdgeOptions options = new EdgeOptions();
 
-                options.addArguments("--headless=new");
+                // Run Edge normally first to diagnose the startup crash.
                 options.addArguments("--disable-gpu");
                 options.addArguments("--window-size=1920,1080");
 
@@ -88,63 +82,78 @@ public class BaseClass {
             } else if (browser.equalsIgnoreCase("firefox")) {
 
                 FirefoxOptions options = new FirefoxOptions();
-
-                options.addArguments("-headless");
                 options.addArguments("--width=1920");
                 options.addArguments("--height=1080");
 
                 driver = new FirefoxDriver(options);
 
             } else {
-
-                throw new IllegalArgumentException("Invalid browser: " + browser);
+                throw new IllegalArgumentException(
+                    "Unsupported browser: " + browser
+                );
             }
 
-            driver.manage().timeouts().implicitlyWait(Duration.ZERO);
+            driver.manage().timeouts()
+                  .implicitlyWait(Duration.ZERO);
 
-            wait = new WebDriverWait(driver,Duration.ofSeconds(15));
+            wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+            driver.manage().window().maximize();
 
             driver.get(CommonData.get("url"));
 
             waitForPageLoad();
 
-            Reporter.log("Application opened successfully",true);
+            logReport("Application opened successfully");
 
         } catch (RuntimeException e) {
+
+            logReport("Browser setup failed for " + browser
+                    + ": " + e.getMessage());
 
             if (driver != null) {
                 try {
                     driver.quit();
-                } 
-                catch (Exception ignored) {
+                } catch (Exception ignored) {
+                    // Cleanup after startup failure.
                 }
-
-                driver = null;
-                wait = null;
             }
+
+            driver = null;
+            wait = null;
 
             throw e;
         }
     }
 
     protected void waitForPageLoad() {
-        wait.until(webDriver -> "complete".equals(((JavascriptExecutor) webDriver).executeScript("return document.readyState")));
+        wait.until(webDriver ->
+            ((JavascriptExecutor) webDriver)
+                .executeScript("return document.readyState")
+                .equals("complete")
+        );
     }
 
     protected WebElement waitForVisible(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return wait.until(
+            ExpectedConditions.visibilityOfElementLocated(locator)
+        );
     }
 
     protected WebElement waitForClickable(By locator) {
-        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+        return wait.until(
+            ExpectedConditions.elementToBeClickable(locator)
+        );
     }
 
-    protected boolean waitForUrlContains(String value) {
-        return wait.until(ExpectedConditions.urlContains(value));
+    protected void waitForUrlContains(String text) {
+        wait.until(ExpectedConditions.urlContains(text));
     }
 
     protected void waitForInvisibility(By locator) {
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+        wait.until(
+            ExpectedConditions.invisibilityOfElementLocated(locator)
+        );
     }
 
     protected void logReport(String message) {
@@ -154,44 +163,41 @@ public class BaseClass {
     @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
 
-        String testName = result.getMethod().getMethodName();
-
         if (result.getStatus() == ITestResult.SUCCESS) {
-
-            Reporter.log("PASS: " + testName, true);
+            logReport("PASS: " + result.getName());
 
         } else if (result.getStatus() == ITestResult.FAILURE) {
-
-            Reporter.log("FAIL: " + testName, true);
+            logReport("FAIL: " + result.getName());
 
             if (driver != null) {
                 try {
-                    Screenshot.takeScreenshot(driver,testName + "_FAILED");
-                } 
-                catch (Exception e) {
-                    Reporter.log("Screenshot failed: " + e.getMessage(),true);
+                    Screenshot.takeScreenshot(
+                        driver,
+                        result.getName() + "_FAILED"
+                    );
+                } catch (Exception e) {
+                    logReport("Screenshot failed: " + e.getMessage());
                 }
             }
 
         } else if (result.getStatus() == ITestResult.SKIP) {
-
-            Reporter.log("SKIP: " + testName, true);
+            logReport("SKIP: " + result.getName());
         }
 
         if (driver != null) {
             try {
                 driver.quit();
             } catch (Exception e) {
-                Reporter.log("Browser cleanup failed: " + e.getMessage(),true);
-            } finally {
-                driver = null;
-                wait = null;
+                logReport("Browser cleanup failed: " + e.getMessage());
             }
         }
+
+        driver = null;
+        wait = null;
     }
 
     @AfterClass(alwaysRun = true)
     public void afterClass() {
-        Reporter.log("Test Class Completed", true);
+        logReport("Test Class Completed");
     }
 }
