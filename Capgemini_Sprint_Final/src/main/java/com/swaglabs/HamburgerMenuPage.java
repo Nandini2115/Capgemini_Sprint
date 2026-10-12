@@ -13,41 +13,38 @@ import org.testng.Reporter;
 
 public class HamburgerMenuPage {
 
-    WebDriver driver;
-    WebDriverWait wait;
-
-    public HamburgerMenuPage(WebDriver driver) {
-        this.driver = driver;
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        PageFactory.initElements(driver, this);
-    }
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
     @FindBy(id = "react-burger-menu-btn")
-    WebElement menuButton;
+    private WebElement menuButton;
 
     @FindBy(id = "inventory_sidebar_link")
-    WebElement allItems;
+    private WebElement allItems;
 
     @FindBy(id = "about_sidebar_link")
-    WebElement about;
+    private WebElement about;
 
     @FindBy(id = "logout_sidebar_link")
-    WebElement logout;
+    private WebElement logout;
 
     @FindBy(id = "reset_sidebar_link")
-    WebElement resetApp;
+    private WebElement resetApp;
 
-    private By dynamicCatalog =
-        By.xpath("//*[normalize-space()='Dynamic Catalog']");
+    public HamburgerMenuPage(WebDriver driver) {
+        if (driver == null) {
+            throw new IllegalArgumentException(
+                "WebDriver is null in HamburgerMenuPage"
+            );
+        }
 
-    private By lazyLoad =
-        By.xpath("//*[normalize-space()='Lazy Load']");
+        this.driver = driver;
+        this.wait = new WebDriverWait(
+            driver, Duration.ofSeconds(10)
+        );
 
-    private By slider =
-        By.xpath("//*[normalize-space()='Slider']");
-
-    private By spinner =
-        By.xpath("//*[normalize-space()='Spinner']");
+        PageFactory.initElements(driver, this);
+    }
 
     public void openMenu() {
         wait.until(
@@ -55,106 +52,43 @@ public class HamburgerMenuPage {
         ).click();
 
         wait.until(
-            ExpectedConditions.visibilityOfElementLocated(dynamicCatalog)
+            ExpectedConditions.visibilityOf(allItems)
         );
 
         Reporter.log("Hamburger menu opened successfully", true);
     }
 
-    public void openDynamicCatalog() {
-        if (driver.findElements(lazyLoad).isEmpty()) {
-            wait.until(
-                ExpectedConditions.elementToBeClickable(dynamicCatalog)
-            ).click();
-        }
-
-        wait.until(
-            ExpectedConditions.visibilityOfElementLocated(lazyLoad)
-        );
-
-        Reporter.log("Dynamic Catalog submenu opened", true);
-    }
-
-    public boolean isDynamicCatalogDisplayed() {
-        boolean displayed = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(dynamicCatalog)
+    public boolean isAllItemsDisplayed() {
+        openMenu();
+        return wait.until(
+            ExpectedConditions.visibilityOf(allItems)
         ).isDisplayed();
-
-        Reporter.log(
-            "Dynamic Catalog displayed: " + displayed,
-            true
-        );
-
-        return displayed;
     }
 
-    public boolean isLazyLoadDisplayed() {
-        openDynamicCatalog();
-
-        boolean displayed = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(lazyLoad)
+    public boolean isAboutDisplayed() {
+        openMenu();
+        return wait.until(
+            ExpectedConditions.visibilityOf(about)
         ).isDisplayed();
-
-        Reporter.log("Lazy Load displayed: " + displayed, true);
-
-        return displayed;
     }
 
-    public void clickLazyLoad() {
-        openDynamicCatalog();
-
-        wait.until(
-            ExpectedConditions.elementToBeClickable(lazyLoad)
-        ).click();
-
-        Reporter.log("Lazy Load selected", true);
-    }
-
-    public boolean isSliderDisplayed() {
-        openDynamicCatalog();
-
-        boolean displayed = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(slider)
+    public boolean isLogoutDisplayed() {
+        openMenu();
+        return wait.until(
+            ExpectedConditions.visibilityOf(logout)
         ).isDisplayed();
-
-        Reporter.log("Slider displayed: " + displayed, true);
-
-        return displayed;
     }
 
-    public void clickSlider() {
-        openDynamicCatalog();
-
-        wait.until(
-            ExpectedConditions.elementToBeClickable(slider)
-        ).click();
-
-        Reporter.log("Slider selected", true);
-    }
-
-    public boolean isSpinnerDisplayed() {
-        openDynamicCatalog();
-
-        boolean displayed = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(spinner)
+    public boolean isResetAppDisplayed() {
+        openMenu();
+        return wait.until(
+            ExpectedConditions.visibilityOf(resetApp)
         ).isDisplayed();
-
-        Reporter.log("Spinner displayed: " + displayed, true);
-
-        return displayed;
-    }
-
-    public void clickSpinner() {
-        openDynamicCatalog();
-
-        wait.until(
-            ExpectedConditions.elementToBeClickable(spinner)
-        ).click();
-
-        Reporter.log("Spinner selected", true);
     }
 
     public void clickAllItems() {
+        openMenu();
+
         wait.until(
             ExpectedConditions.elementToBeClickable(allItems)
         ).click();
@@ -167,6 +101,8 @@ public class HamburgerMenuPage {
     }
 
     public void clickAbout() {
+        openMenu();
+
         wait.until(
             ExpectedConditions.elementToBeClickable(about)
         ).click();
@@ -179,6 +115,8 @@ public class HamburgerMenuPage {
     }
 
     public void clickLogout() {
+        openMenu();
+
         wait.until(
             ExpectedConditions.elementToBeClickable(logout)
         ).click();
@@ -193,15 +131,11 @@ public class HamburgerMenuPage {
     }
 
     public void clickResetApp() {
+        openMenu();
+
         wait.until(
             ExpectedConditions.elementToBeClickable(resetApp)
         ).click();
-
-        wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.id("react-burger-menu-btn")
-            )
-        );
 
         Reporter.log("Reset App State selected", true);
     }
