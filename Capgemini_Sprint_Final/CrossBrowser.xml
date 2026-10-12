@@ -30,20 +30,20 @@
         <parameter name="browser" value="edge"/>
 
         <classes>
-            <class name="com.swaglabs.login.Login_Test_Script1"/>
-            <class name="com.swaglabs.login.Login_Test_Script2"/>
+            <class name="ecom.swaglabs.login.Login_Test_Script1"/>
+            <class name="ecom.swaglabs.login.Login_Test_Script2"/>
 
-            <class name="com.swaglabs.product.Product_Test_Script1"/>
-            <class name="com.swaglabs.product.Product_Test_Script2"/>
+            <class name="ecom.swaglabs.product.Product_Test_Script1"/>
+            <class name="ecom.swaglabs.product.Product_Test_Script2"/>
 
-            <class name="com.swaglabs.cart.Cart_Test_Script1"/>
-            <class name="com.swaglabs.cart.Cart_Test_Script2"/>
-            <class name="com.swaglabs.cart.Cart_Test_Script3"/>
+            <class name="ecom.swaglabs.cart.Cart_Test_Script1"/>
+            <class name="ecom.swaglabs.cart.Cart_Test_Script2"/>
+            <class name="ecom.swaglabs.cart.Cart_Test_Script3"/>
 
-            <class name="com.swaglabs.checkout.CheckOut_Test_Script1"/>
-            <class name="com.swaglabs.checkout.CheckOut_Test_Script2"/>
+            <class name="ecom.swaglabs.checkout.CheckOut_Test_Script1"/>
+            <class name="ecom.swaglabs.checkout.CheckOut_Test_Script2"/>
 
-            <class name="com.swaglabs.hamburger.HamBurger_Test_Script1"/>
+            <class name="ecom.swaglabs.hamburger.HamBurger_Test_Script1"/>
         </classes>
     </test>
 
@@ -52,20 +52,20 @@
         <parameter name="browser" value="firefox"/>
 
         <classes>
-            <class name="com.swaglabs.login.Login_Test_Script1"/>
-            <class name="com.swaglabs.login.Login_Test_Script2"/>
+            <class name="ecom.swaglabs.login.Login_Test_Script1"/>
+            <class name="ecom.swaglabs.login.Login_Test_Script2"/>
 
-            <class name="com.swaglabs.product.Product_Test_Script1"/>
-            <class name="com.swaglabs.product.Product_Test_Script2"/>
+            <class name="ecom.swaglabs.product.Product_Test_Script1"/>
+            <class name="ecom.swaglabs.product.Product_Test_Script2"/>
 
-            <class name="com.swaglabs.cart.Cart_Test_Script1"/>
-            <class name="com.swaglabs.cart.Cart_Test_Script2"/>
-            <class name="com.swaglabs.cart.Cart_Test_Script3"/>
+            <class name="ecom.swaglabs.cart.Cart_Test_Script1"/>
+            <class name="ecom.swaglabs.cart.Cart_Test_Script2"/>
+            <class name="ecom.swaglabs.cart.Cart_Test_Script3"/>
 
-            <class name="com.swaglabs.checkout.CheckOut_Test_Script1"/>
-            <class name="com.swaglabs.checkout.CheckOut_Test_Script2"/>
+            <class name="ecom.swaglabs.checkout.CheckOut_Test_Script1"/>
+            <class name="ecom.swaglabs.checkout.CheckOut_Test_Script2"/>
 
-            <class name="com.swaglabs.hamburger.HamBurger_Test_Script1"/>
+            <class name="ecom.swaglabs.hamburger.HamBurger_Test_Script1"/>
         </classes>
     </test>
 
