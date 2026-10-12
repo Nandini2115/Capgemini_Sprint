@@ -1,4 +1,3 @@
-
 package baseclass;
 
 import java.time.Duration;
@@ -52,15 +51,15 @@ public class BaseClass {
         System.out.println("Browser selected: " + browser);
 
         try {
-            switch (browser.toLowerCase().trim()) {
+            switch (browser.toLowerCase()) {
 
-                case "chrome":
-                    ChromeOptions chromeOptions = new ChromeOptions();
+                case "chrome": {
+                    ChromeOptions options = new ChromeOptions();
 
-                    chromeOptions.addArguments("--disable-gpu");
-                    chromeOptions.addArguments("--window-size=1920,1080");
+                    options.addArguments("--disable-gpu");
+                    options.addArguments("--window-size=1920,1080");
 
-                    chromeOptions.setExperimentalOption(
+                    options.setExperimentalOption(
                         "prefs",
                         Map.of(
                             "credentials_enable_service", false,
@@ -69,30 +68,38 @@ public class BaseClass {
                         )
                     );
 
-                    driver = new ChromeDriver(chromeOptions);
+                    driver = new ChromeDriver(options);
                     break;
+                }
 
-                case "edge":
-                    EdgeOptions edgeOptions = new EdgeOptions();
+                case "edge": {
+                    System.setProperty(
+                        "webdriver.edge.driver",
+                        "C:\\Users\\HP\\Downloads\\edgedriver_win64\\msedgedriver.exe"
+                    );
 
-                    edgeOptions.addArguments("--headless=new");
-                    edgeOptions.addArguments("--disable-gpu");
-                    edgeOptions.addArguments("--window-size=1920,1080");
-                    edgeOptions.addArguments("--no-first-run");
-                    edgeOptions.addArguments("--no-default-browser-check");
+                    EdgeOptions options = new EdgeOptions();
 
-                    driver = new EdgeDriver(edgeOptions);
+                    options.addArguments("--headless=new");
+                    options.addArguments("--disable-gpu");
+                    options.addArguments("--window-size=1920,1080");
+                    options.addArguments("--no-first-run");
+                    options.addArguments("--no-default-browser-check");
+
+                    driver = new EdgeDriver(options);
                     break;
+                }
 
-                case "firefox":
-                    FirefoxOptions firefoxOptions = new FirefoxOptions();
+                case "firefox": {
+                    FirefoxOptions options = new FirefoxOptions();
 
-                    firefoxOptions.addArguments("-headless");
-                    firefoxOptions.addArguments("--width=1920");
-                    firefoxOptions.addArguments("--height=1080");
+                    options.addArguments("-headless");
+                    options.addArguments("--width=1920");
+                    options.addArguments("--height=1080");
 
-                    driver = new FirefoxDriver(firefoxOptions);
+                    driver = new FirefoxDriver(options);
                     break;
+                }
 
                 default:
                     throw new IllegalArgumentException(
@@ -104,15 +111,18 @@ public class BaseClass {
                   .implicitlyWait(Duration.ZERO);
 
             wait = new WebDriverWait(
-                driver, Duration.ofSeconds(15)
+                driver,
+                Duration.ofSeconds(15)
             );
 
             driver.get(CommonData.get("url"));
+
             waitForPageLoad();
 
             System.out.println("Application opened successfully");
 
         } catch (RuntimeException e) {
+
             System.err.println(
                 "Browser setup failed for " + browser + ": "
                 + e.getMessage()
@@ -121,11 +131,8 @@ public class BaseClass {
             if (driver != null) {
                 try {
                     driver.quit();
-                } catch (Exception cleanupError) {
-                    System.err.println(
-                        "Browser cleanup failed: "
-                        + cleanupError.getMessage()
-                    );
+                } catch (Exception ignored) {
+                    // Ignore cleanup errors
                 }
             }
 
@@ -136,20 +143,20 @@ public class BaseClass {
         }
     }
 
-    protected void waitForPageLoad() {
-        new WebDriverWait(driver, Duration.ofSeconds(15))
-            .until(webDriver ->
-                "complete".equals(
-                    ((JavascriptExecutor) webDriver)
-                        .executeScript("return document.readyState")
-                )
-            );
+    public void waitForPageLoad() {
+        wait.until(webDriver ->
+            "complete".equals(
+                ((JavascriptExecutor) webDriver)
+                    .executeScript("return document.readyState")
+            )
+        );
     }
 
     @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
 
-        String testName = result.getMethod().getMethodName();
+        String testName =
+            result.getMethod().getMethodName();
 
         try {
             if (result.getStatus() == ITestResult.SUCCESS) {
@@ -159,30 +166,25 @@ public class BaseClass {
                 System.out.println("FAIL: " + testName);
 
                 if (driver != null) {
-                    try {
-                        Screenshot.takeScreenshot(
-                            driver, testName + "_FAILED"
-                        );
-                    } catch (Exception screenshotError) {
-                        System.err.println(
-                            "Screenshot failed: "
-                            + screenshotError.getMessage()
-                        );
-                    }
+                    Screenshot.takeScreenshot(
+                        driver,
+                        testName + "_FAILED"
+                    );
+
+                    Reporter.log(
+                        "Test failed: " + testName,
+                        true
+                    );
                 }
 
             } else if (result.getStatus() == ITestResult.SKIP) {
                 System.out.println("SKIP: " + testName);
             }
 
-            String statusMessage =
-                result.getStatus() == ITestResult.SUCCESS
-                    ? "PASS: " + testName
-                    : result.getStatus() == ITestResult.FAILURE
-                        ? "FAIL: " + testName
-                        : "SKIP: " + testName;
-
-            Reporter.log(statusMessage, true);
+        } catch (Exception e) {
+            System.err.println(
+                "Error during test cleanup: " + e.getMessage()
+            );
 
         } finally {
             if (driver != null) {
