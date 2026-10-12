@@ -7,8 +7,8 @@ import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
+//import org.openqa.selenium.edge.EdgeDriver;
+//import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -49,19 +49,21 @@ public class BaseClass {
 
                 driver = new ChromeDriver(options);
 
-            } else if (browser.equalsIgnoreCase("edge")) {
+            } 
+            //else if (browser.equalsIgnoreCase("edge")) {
 
-                EdgeOptions options = new EdgeOptions();
-                options.addArguments("--headless=new");
-                options.addArguments("--disable-gpu");
-                options.addArguments("--window-size=1920,1080");
-                options.addArguments("--no-first-run");
-                options.addArguments("--no-default-browser-check");
-                options.addArguments("--disable-extensions");
+                //EdgeOptions options = new EdgeOptions();
+                //options.addArguments("--headless=new");
+                //options.addArguments("--disable-gpu");
+                //options.addArguments("--window-size=1920,1080");
+                //options.addArguments("--no-first-run");
+                //options.addArguments("--no-default-browser-check");
+                //options.addArguments("--disable-extensions");
 
-                driver = new EdgeDriver(options);
+                //driver = new EdgeDriver(options);
 
-            } else if (browser.equalsIgnoreCase("firefox")) {
+            //} 
+        else if (browser.equalsIgnoreCase("firefox")) {
 
                 FirefoxOptions options = new FirefoxOptions();
                 options.addArguments("-headless");
