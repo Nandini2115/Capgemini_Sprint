@@ -1,15 +1,13 @@
 package com.swaglabs;
 
-import java.time.Duration;
-
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Reporter;
+
+import java.time.Duration;
 
 public class HamburgerMenuPage {
 
@@ -31,31 +29,48 @@ public class HamburgerMenuPage {
     @FindBy(id = "reset_sidebar_link")
     private WebElement resetApp;
 
+    @FindBy(id = "react-burger-cross-btn")
+    private WebElement closeMenuButton;
+
     public HamburgerMenuPage(WebDriver driver) {
         if (driver == null) {
-            throw new IllegalArgumentException(
-                "WebDriver is null in HamburgerMenuPage"
-            );
+            throw new IllegalArgumentException("WebDriver cannot be null");
         }
 
         this.driver = driver;
-        this.wait = new WebDriverWait(
-            driver, Duration.ofSeconds(10)
-        );
-
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
     }
 
     public void openMenu() {
-        wait.until(
-            ExpectedConditions.elementToBeClickable(menuButton)
-        ).click();
+        if (isMenuOpen()) {
+            return;
+        }
 
-        wait.until(
-            ExpectedConditions.visibilityOf(allItems)
-        );
+        wait.until(ExpectedConditions.elementToBeClickable(menuButton)).click();
 
-        Reporter.log("Hamburger menu opened successfully", true);
+        wait.until(ExpectedConditions.visibilityOf(allItems));
+        System.out.println("Hamburger menu opened successfully");
+    }
+
+    private boolean isMenuOpen() {
+        try {
+            return allItems.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void closeMenu() {
+        if (isMenuOpen()) {
+            wait.until(
+                ExpectedConditions.elementToBeClickable(closeMenuButton)
+            ).click();
+
+            wait.until(
+                ExpectedConditions.invisibilityOf(allItems)
+            );
+        }
     }
 
     public boolean isAllItemsDisplayed() {
@@ -88,55 +103,27 @@ public class HamburgerMenuPage {
 
     public void clickAllItems() {
         openMenu();
-
-        wait.until(
-            ExpectedConditions.elementToBeClickable(allItems)
-        ).click();
-
-        wait.until(
-            ExpectedConditions.urlContains("inventory")
-        );
-
-        Reporter.log("All Items selected", true);
+        wait.until(ExpectedConditions.elementToBeClickable(allItems)).click();
+        wait.until(ExpectedConditions.urlContains("inventory.html"));
     }
 
     public void clickAbout() {
         openMenu();
-
-        wait.until(
-            ExpectedConditions.elementToBeClickable(about)
-        ).click();
-
-        wait.until(
-            ExpectedConditions.urlContains("saucelabs")
-        );
-
-        Reporter.log("About selected", true);
+        wait.until(ExpectedConditions.elementToBeClickable(about)).click();
     }
 
     public void clickLogout() {
         openMenu();
-
-        wait.until(
-            ExpectedConditions.elementToBeClickable(logout)
-        ).click();
-
-        wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.id("login-button")
-            )
-        );
-
-        Reporter.log("Logged out successfully", true);
+        wait.until(ExpectedConditions.elementToBeClickable(logout)).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+            org.openqa.selenium.By.id("login-button")
+        ));
+        System.out.println("Logout successful");
     }
 
     public void clickResetApp() {
         openMenu();
-
-        wait.until(
-            ExpectedConditions.elementToBeClickable(resetApp)
-        ).click();
-
-        Reporter.log("Reset App State selected", true);
+        wait.until(ExpectedConditions.elementToBeClickable(resetApp)).click();
+        System.out.println("Reset App State clicked");
     }
 }
