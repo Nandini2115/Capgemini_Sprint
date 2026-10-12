@@ -1,7 +1,7 @@
 
 package com.swaglabs;
 
-import baseclass.CommonData;
+import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,8 +10,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Reporter;
 
-import java.time.Duration;
+import baseclass.CommonData;
 
 public class CheckoutPage1 {
 
@@ -33,29 +34,41 @@ public class CheckoutPage1 {
     @FindBy(css = "[data-test='error']")
     private WebElement errorMessage;
 
-    @FindBy(id = "finish")
-    private WebElement finishButton;
-
-    @FindBy(className = "complete-header")
-    private WebElement orderConfirmation;
-
     public CheckoutPage1(WebDriver driver) {
         if (driver == null) {
-            throw new IllegalArgumentException("WebDriver cannot be null");
+            throw new IllegalArgumentException(
+                "WebDriver cannot be null"
+            );
         }
 
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        this.wait = new WebDriverWait(
+            driver, Duration.ofSeconds(15)
+        );
 
         PageFactory.initElements(driver, this);
     }
 
+    // Enter checkout customer information
     public void enterDetails() {
-        enterValue(firstNameField, CommonData.get("firstName"));
-        enterValue(lastNameField, CommonData.get("lastName"));
-        enterValue(postalCodeField, CommonData.get("postalCode"));
+        enterValue(
+            firstNameField,
+            CommonData.get("firstName")
+        );
 
-        System.out.println("Checkout details entered successfully");
+        enterValue(
+            lastNameField,
+            CommonData.get("lastName")
+        );
+
+        enterValue(
+            postalCodeField,
+            CommonData.get("postalCode")
+        );
+
+        Reporter.log(
+            "Checkout details entered successfully", true
+        );
     }
 
     private void enterValue(WebElement element, String value) {
@@ -65,32 +78,37 @@ public class CheckoutPage1 {
             );
         }
 
-        wait.until(ExpectedConditions.visibilityOf(element));
+        wait.until(
+            ExpectedConditions.visibilityOf(element)
+        );
+
         element.clear();
         element.sendKeys(value);
     }
 
+    // Submit checkout information and handle either outcome
     public void clickContinue() {
         wait.until(
-            ExpectedConditions.elementToBeClickable(continueButton)
+            ExpectedConditions.elementToBeClickable(
+                continueButton
+            )
         ).click();
 
-        try {
-            wait.until(d ->
-                d.getCurrentUrl().contains("checkout-step-two.html")
-                || !d.findElements(
-                    By.cssSelector("[data-test='error']")
-                ).isEmpty()
-            );
-        } catch (org.openqa.selenium.TimeoutException e) {
-            throw new AssertionError(
-                "Checkout did not proceed. Current URL: "
-                + driver.getCurrentUrl(), e
-            );
-        }
+        wait.until(d ->
+            d.getCurrentUrl().contains("checkout-step-two.html")
+            || !d.findElements(
+                By.cssSelector("[data-test='error']")
+            ).isEmpty()
+        );
 
-        if (driver.getCurrentUrl().contains("checkout-step-two.html")) {
-            System.out.println("Checkout information submitted successfully");
+        if (driver.getCurrentUrl().contains(
+                "checkout-step-two.html")) {
+
+            Reporter.log(
+                "Checkout information submitted successfully",
+                true
+            );
+
         } else {
             String message = driver.findElement(
                 By.cssSelector("[data-test='error']")
@@ -102,10 +120,24 @@ public class CheckoutPage1 {
         }
     }
 
+    // Negative test: click Continue with empty fields
     public void continueWithoutEnteringDetails() {
         wait.until(
-            ExpectedConditions.elementToBeClickable(continueButton)
+            ExpectedConditions.elementToBeClickable(
+                continueButton
+            )
         ).click();
+
+        wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("[data-test='error']")
+            )
+        );
+
+        Reporter.log(
+            "Checkout validation message displayed",
+            true
+        );
     }
 
     public boolean isErrorDisplayed() {
@@ -115,33 +147,16 @@ public class CheckoutPage1 {
     }
 
     public String getErrorMessage() {
-        wait.until(
+        return wait.until(
             ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("[data-test='error']")
             )
-        );
-
-        return errorMessage.getText();
+        ).getText();
     }
 
     public boolean isCheckoutOverviewDisplayed() {
-        return driver.getCurrentUrl().contains("checkout-step-two.html");
-    }
-
-    public void clickFinish() {
-        wait.until(
-            ExpectedConditions.elementToBeClickable(finishButton)
-        ).click();
-
-        System.out.println("Finish button clicked successfully");
-    }
-
-    public boolean isOrderPlaced() {
-        wait.until(
-            ExpectedConditions.visibilityOf(orderConfirmation)
+        return driver.getCurrentUrl().contains(
+            "checkout-step-two.html"
         );
-
-        return orderConfirmation.getText()
-            .equalsIgnoreCase("Thank you for your order!");
     }
 }
