@@ -2,6 +2,7 @@
 package baseclass;
 
 import java.time.Duration;
+import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,6 +11,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import org.testng.ITestResult;
@@ -54,12 +56,13 @@ public class BaseClass {
 
                 case "chrome":
                     ChromeOptions chromeOptions = new ChromeOptions();
+
                     chromeOptions.addArguments("--disable-gpu");
                     chromeOptions.addArguments("--window-size=1920,1080");
 
                     chromeOptions.setExperimentalOption(
                         "prefs",
-                        java.util.Map.of(
+                        Map.of(
                             "credentials_enable_service", false,
                             "profile.password_manager_enabled", false,
                             "profile.password_manager_leak_detection", false
@@ -72,21 +75,19 @@ public class BaseClass {
                 case "edge":
                     EdgeOptions edgeOptions = new EdgeOptions();
 
+                    edgeOptions.addArguments("--headless=new");
                     edgeOptions.addArguments("--disable-gpu");
                     edgeOptions.addArguments("--window-size=1920,1080");
                     edgeOptions.addArguments("--no-first-run");
                     edgeOptions.addArguments("--no-default-browser-check");
-
-                    // Dedicated profile for Jenkins automation.
-                    edgeOptions.addArguments(
-                        "--user-data-dir=C:\\JenkinsEdgeProfile"
-                    );
 
                     driver = new EdgeDriver(edgeOptions);
                     break;
 
                 case "firefox":
                     FirefoxOptions firefoxOptions = new FirefoxOptions();
+
+                    firefoxOptions.addArguments("-headless");
                     firefoxOptions.addArguments("--width=1920");
                     firefoxOptions.addArguments("--height=1080");
 
@@ -139,7 +140,7 @@ public class BaseClass {
         new WebDriverWait(driver, Duration.ofSeconds(15))
             .until(webDriver ->
                 "complete".equals(
-                    ((org.openqa.selenium.JavascriptExecutor) webDriver)
+                    ((JavascriptExecutor) webDriver)
                         .executeScript("return document.readyState")
                 )
             );
@@ -148,8 +149,7 @@ public class BaseClass {
     @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
 
-        String testName =
-            result.getMethod().getMethodName();
+        String testName = result.getMethod().getMethodName();
 
         try {
             if (result.getStatus() == ITestResult.SUCCESS) {
@@ -175,14 +175,14 @@ public class BaseClass {
                 System.out.println("SKIP: " + testName);
             }
 
-            Reporter.log(
+            String statusMessage =
                 result.getStatus() == ITestResult.SUCCESS
                     ? "PASS: " + testName
                     : result.getStatus() == ITestResult.FAILURE
                         ? "FAIL: " + testName
-                        : "SKIP: " + testName,
-                true
-            );
+                        : "SKIP: " + testName;
+
+            Reporter.log(statusMessage, true);
 
         } finally {
             if (driver != null) {
