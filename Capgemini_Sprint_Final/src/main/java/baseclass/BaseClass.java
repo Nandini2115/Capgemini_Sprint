@@ -2,20 +2,14 @@
 package baseclass;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import org.testng.ITestResult;
@@ -34,88 +28,103 @@ public class BaseClass {
     protected WebDriver driver;
     protected WebDriverWait wait;
 
-    @BeforeSuite(alwaysRun = true)
+    @BeforeSuite
     public void beforeSuite() {
-        logReport("Test Suite Started");
+        System.out.println("Test Suite Started");
     }
 
-    @BeforeTest(alwaysRun = true)
+    @BeforeTest
     public void beforeTest() {
-        logReport("Test Started");
+        System.out.println("Test Started");
     }
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeClass
     public void beforeClass() {
-        logReport("Test Class Started");
+        System.out.println("Test Class Started");
     }
 
     @Parameters("browser")
-    @BeforeMethod(alwaysRun = true)
+    @BeforeMethod
     public void setUp(@Optional("chrome") String browser) {
 
-        logReport("Browser selected: " + browser);
+        System.out.println("Browser selected: " + browser);
 
         try {
-            if (browser.equalsIgnoreCase("chrome")) {
+            switch (browser.toLowerCase().trim()) {
 
-                ChromeOptions options = new ChromeOptions();
+                case "chrome":
+                    ChromeOptions chromeOptions = new ChromeOptions();
+                    chromeOptions.addArguments("--disable-gpu");
+                    chromeOptions.addArguments("--window-size=1920,1080");
 
-                Map<String, Object> prefs = new HashMap<>();
-                prefs.put("profile.password_manager_leak_detection", false);
-                options.setExperimentalOption("prefs", prefs);
+                    chromeOptions.setExperimentalOption(
+                        "prefs",
+                        java.util.Map.of(
+                            "credentials_enable_service", false,
+                            "profile.password_manager_enabled", false,
+                            "profile.password_manager_leak_detection", false
+                        )
+                    );
 
-                options.addArguments("--disable-gpu");
-                options.addArguments("--window-size=1920,1080");
+                    driver = new ChromeDriver(chromeOptions);
+                    break;
 
-                driver = new ChromeDriver(options);
+                case "edge":
+                    EdgeOptions edgeOptions = new EdgeOptions();
 
-            } else if (browser.equalsIgnoreCase("edge")) {
+                    edgeOptions.addArguments("--disable-gpu");
+                    edgeOptions.addArguments("--window-size=1920,1080");
+                    edgeOptions.addArguments("--no-first-run");
+                    edgeOptions.addArguments("--no-default-browser-check");
 
-                EdgeOptions options = new EdgeOptions();
+                    // Dedicated profile for Jenkins automation.
+                    edgeOptions.addArguments(
+                        "--user-data-dir=C:\\JenkinsEdgeProfile"
+                    );
 
-                // Run Edge normally first to diagnose the startup crash.
-                options.addArguments("--disable-gpu");
-                options.addArguments("--window-size=1920,1080");
+                    driver = new EdgeDriver(edgeOptions);
+                    break;
 
-                driver = new EdgeDriver(options);
+                case "firefox":
+                    FirefoxOptions firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.addArguments("--width=1920");
+                    firefoxOptions.addArguments("--height=1080");
 
-            } else if (browser.equalsIgnoreCase("firefox")) {
+                    driver = new FirefoxDriver(firefoxOptions);
+                    break;
 
-                FirefoxOptions options = new FirefoxOptions();
-                options.addArguments("--width=1920");
-                options.addArguments("--height=1080");
-
-                driver = new FirefoxDriver(options);
-
-            } else {
-                throw new IllegalArgumentException(
-                    "Unsupported browser: " + browser
-                );
+                default:
+                    throw new IllegalArgumentException(
+                        "Unsupported browser: " + browser
+                    );
             }
 
             driver.manage().timeouts()
                   .implicitlyWait(Duration.ZERO);
 
-            wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
-            driver.manage().window().maximize();
+            wait = new WebDriverWait(
+                driver, Duration.ofSeconds(15)
+            );
 
             driver.get(CommonData.get("url"));
-
             waitForPageLoad();
 
-            logReport("Application opened successfully");
+            System.out.println("Application opened successfully");
 
         } catch (RuntimeException e) {
-
-            logReport("Browser setup failed for " + browser
-                    + ": " + e.getMessage());
+            System.err.println(
+                "Browser setup failed for " + browser + ": "
+                + e.getMessage()
+            );
 
             if (driver != null) {
                 try {
                     driver.quit();
-                } catch (Exception ignored) {
-                    // Cleanup after startup failure.
+                } catch (Exception cleanupError) {
+                    System.err.println(
+                        "Browser cleanup failed: "
+                        + cleanupError.getMessage()
+                    );
                 }
             }
 
@@ -127,77 +136,72 @@ public class BaseClass {
     }
 
     protected void waitForPageLoad() {
-        wait.until(webDriver ->
-            ((JavascriptExecutor) webDriver)
-                .executeScript("return document.readyState")
-                .equals("complete")
-        );
-    }
-
-    protected WebElement waitForVisible(By locator) {
-        return wait.until(
-            ExpectedConditions.visibilityOfElementLocated(locator)
-        );
-    }
-
-    protected WebElement waitForClickable(By locator) {
-        return wait.until(
-            ExpectedConditions.elementToBeClickable(locator)
-        );
-    }
-
-    protected void waitForUrlContains(String text) {
-        wait.until(ExpectedConditions.urlContains(text));
-    }
-
-    protected void waitForInvisibility(By locator) {
-        wait.until(
-            ExpectedConditions.invisibilityOfElementLocated(locator)
-        );
-    }
-
-    protected void logReport(String message) {
-        Reporter.log(message, true);
+        new WebDriverWait(driver, Duration.ofSeconds(15))
+            .until(webDriver ->
+                "complete".equals(
+                    ((org.openqa.selenium.JavascriptExecutor) webDriver)
+                        .executeScript("return document.readyState")
+                )
+            );
     }
 
     @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
 
-        if (result.getStatus() == ITestResult.SUCCESS) {
-            logReport("PASS: " + result.getName());
+        String testName =
+            result.getMethod().getMethodName();
 
-        } else if (result.getStatus() == ITestResult.FAILURE) {
-            logReport("FAIL: " + result.getName());
+        try {
+            if (result.getStatus() == ITestResult.SUCCESS) {
+                System.out.println("PASS: " + testName);
 
+            } else if (result.getStatus() == ITestResult.FAILURE) {
+                System.out.println("FAIL: " + testName);
+
+                if (driver != null) {
+                    try {
+                        Screenshot.takeScreenshot(
+                            driver, testName + "_FAILED"
+                        );
+                    } catch (Exception screenshotError) {
+                        System.err.println(
+                            "Screenshot failed: "
+                            + screenshotError.getMessage()
+                        );
+                    }
+                }
+
+            } else if (result.getStatus() == ITestResult.SKIP) {
+                System.out.println("SKIP: " + testName);
+            }
+
+            Reporter.log(
+                result.getStatus() == ITestResult.SUCCESS
+                    ? "PASS: " + testName
+                    : result.getStatus() == ITestResult.FAILURE
+                        ? "FAIL: " + testName
+                        : "SKIP: " + testName,
+                true
+            );
+
+        } finally {
             if (driver != null) {
                 try {
-                    Screenshot.takeScreenshot(
-                        driver,
-                        result.getName() + "_FAILED"
-                    );
+                    driver.quit();
                 } catch (Exception e) {
-                    logReport("Screenshot failed: " + e.getMessage());
+                    System.err.println(
+                        "Error closing browser: " + e.getMessage()
+                    );
                 }
             }
 
-        } else if (result.getStatus() == ITestResult.SKIP) {
-            logReport("SKIP: " + result.getName());
+            driver = null;
+            wait = null;
         }
-
-        if (driver != null) {
-            try {
-                driver.quit();
-            } catch (Exception e) {
-                logReport("Browser cleanup failed: " + e.getMessage());
-            }
-        }
-
-        driver = null;
-        wait = null;
     }
 
     @AfterClass(alwaysRun = true)
     public void afterClass() {
-        logReport("Test Class Completed");
+        System.out.println("Test Class Completed");
     }
 }
