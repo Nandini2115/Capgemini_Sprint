@@ -5,13 +5,16 @@ import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 import com.swaglabs.LoginPage;
-
 import baseclass.BaseClass;
 
 public class Login_Test_Script1 extends BaseClass {
 
     @Test(groups = {"smoke", "functional"})
     public void validLoginTest() {
+
+        Assert.assertNotNull(
+            driver, "WebDriver is null before login."
+        );
 
         Reporter.log("Starting Valid Login Test", true);
 
@@ -23,14 +26,15 @@ public class Login_Test_Script1 extends BaseClass {
             "User was not logged in successfully"
         );
 
-        Reporter.log(
-            "PASS: User logged in successfully",
-            true
-        );
+        Reporter.log("PASS: User logged in successfully", true);
     }
 
     @Test(groups = {"functional"})
     public void validProblemUserLoginTest() {
+
+        Assert.assertNotNull(
+            driver, "WebDriver is null before login."
+        );
 
         Reporter.log("Starting Problem User Login Test", true);
 
@@ -43,13 +47,16 @@ public class Login_Test_Script1 extends BaseClass {
         );
 
         Reporter.log(
-            "PASS: Problem user login completed",
-            true
+            "Problem user login test completed", true
         );
     }
 
     @Test(groups = {"functional", "negative"})
     public void invalidLoginTest() {
+
+        Assert.assertNotNull(
+            driver, "WebDriver is null before login."
+        );
 
         Reporter.log("Starting Invalid Login Test", true);
 
@@ -58,13 +65,14 @@ public class Login_Test_Script1 extends BaseClass {
 
         String errorMessage = login.getErrorMessage();
 
-        Assert.assertTrue(
-            errorMessage.length() > 0,
+        Assert.assertFalse(
+            errorMessage.isEmpty(),
             "Error message was not displayed"
         );
 
         Reporter.log(
-            "PASS: Invalid login error displayed: " + errorMessage,
+            "PASS: Invalid login error displayed: "
+                + errorMessage,
             true
         );
     }

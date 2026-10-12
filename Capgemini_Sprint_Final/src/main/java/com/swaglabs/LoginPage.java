@@ -15,43 +15,42 @@ import baseclass.CommonData;
 
 public class LoginPage {
 
-    WebDriver driver;
-    WebDriverWait wait;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
+
+    @FindBy(id = "user-name")
+    private WebElement username;
+
+    @FindBy(id = "password")
+    private WebElement password;
+
+    @FindBy(id = "login-button")
+    private WebElement loginButton;
+
+    @FindBy(css = "[data-test='error']")
+    private WebElement errorMessage;
 
     public LoginPage(WebDriver driver) {
+
+        if (driver == null) {
+            throw new IllegalArgumentException(
+                "WebDriver is null. Ensure setUp() runs first."
+            );
+        }
+
         this.driver = driver;
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(
+            driver, Duration.ofSeconds(15)
+        );
+
         PageFactory.initElements(driver, this);
     }
 
-    @FindBy(id = "user-name")
-    WebElement username;
-
-    @FindBy(id = "password")
-    WebElement password;
-
-    @FindBy(id = "login-button")
-    WebElement loginButton;
-
-    @FindBy(css = "[data-test='error']")
-    WebElement errorMessage;
-
     public void login() {
-        wait.until(
-            ExpectedConditions.visibilityOf(username)
-        ).sendKeys(CommonData.get("username"));
-
-        Reporter.log("Username entered", true);
-
-        wait.until(
-            ExpectedConditions.visibilityOf(password)
-        ).sendKeys(CommonData.get("password"));
-
-        Reporter.log("Password entered", true);
-
-        wait.until(
-            ExpectedConditions.elementToBeClickable(loginButton)
-        ).click();
+        login(
+            CommonData.get("username"),
+            CommonData.get("password")
+        );
 
         wait.until(
             ExpectedConditions.visibilityOfElementLocated(
@@ -62,12 +61,15 @@ public class LoginPage {
         Reporter.log("Login successful", true);
     }
 
-    public void login(String usernameValue, String passwordValue) {
+    public void login(
+            String usernameValue,
+            String passwordValue) {
+
         wait.until(
             ExpectedConditions.visibilityOf(username)
         ).sendKeys(usernameValue);
 
-        Reporter.log("Username entered: " + usernameValue, true);
+        Reporter.log("Username entered", true);
 
         wait.until(
             ExpectedConditions.visibilityOf(password)
@@ -97,12 +99,8 @@ public class LoginPage {
     }
 
     public String getErrorMessage() {
-        String message = wait.until(
+        return wait.until(
             ExpectedConditions.visibilityOf(errorMessage)
         ).getText();
-
-        Reporter.log("Login error message: " + message, true);
-
-        return message;
     }
 }
