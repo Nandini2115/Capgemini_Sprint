@@ -1,3 +1,4 @@
+
 package baseclass;
 
 import java.time.Duration;
@@ -8,10 +9,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.JavascriptExecutor;
+
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -52,83 +59,92 @@ public class BaseClass {
 
         Reporter.log("Browser selected: " + browser, true);
 
-        if (browser.equalsIgnoreCase("chrome")) {
+        try {
 
-            ChromeOptions options = new ChromeOptions();
-            Map<String, Object> preferences = new HashMap<>();
+            if (browser.equalsIgnoreCase("chrome")) {
 
-            preferences.put(
-                "profile.password_manager_leak_detection",
-                false
-            );
+                ChromeOptions options = new ChromeOptions();
 
-            options.setExperimentalOption("prefs", preferences);
-            driver = new ChromeDriver(options);
+                Map<String, Object> preferences = new HashMap<>();
+                preferences.put("profile.password_manager_leak_detection",false);
 
-        } else if (browser.equalsIgnoreCase("edge")) {
+                options.setExperimentalOption("prefs", preferences);
+                options.addArguments("--headless=new");
+                options.addArguments("--disable-gpu");
+                options.addArguments("--window-size=1920,1080");
 
-            driver = new EdgeDriver();
+                driver = new ChromeDriver(options);
 
-        } else if (browser.equalsIgnoreCase("firefox")) {
+            } else if (browser.equalsIgnoreCase("edge")) {
 
-            driver = new FirefoxDriver();
+                EdgeOptions options = new EdgeOptions();
 
-        } else {
+                options.addArguments("--headless=new");
+                options.addArguments("--disable-gpu");
+                options.addArguments("--window-size=1920,1080");
 
-            throw new IllegalArgumentException(
-                "Invalid browser: " + browser
-            );
+                driver = new EdgeDriver(options);
+
+            } else if (browser.equalsIgnoreCase("firefox")) {
+
+                FirefoxOptions options = new FirefoxOptions();
+
+                options.addArguments("-headless");
+                options.addArguments("--width=1920");
+                options.addArguments("--height=1080");
+
+                driver = new FirefoxDriver(options);
+
+            } else {
+
+                throw new IllegalArgumentException("Invalid browser: " + browser);
+            }
+
+            driver.manage().timeouts().implicitlyWait(Duration.ZERO);
+
+            wait = new WebDriverWait(driver,Duration.ofSeconds(15));
+
+            driver.get(CommonData.get("url"));
+
+            waitForPageLoad();
+
+            Reporter.log("Application opened successfully",true);
+
+        } catch (RuntimeException e) {
+
+            if (driver != null) {
+                try {
+                    driver.quit();
+                } 
+                catch (Exception ignored) {
+                }
+
+                driver = null;
+                wait = null;
+            }
+
+            throw e;
         }
-
-        driver.manage().window().maximize();
-
-        driver.manage().timeouts().implicitlyWait(
-            Duration.ofSeconds(0)
-        );
-
-        wait = new WebDriverWait(
-            driver,
-            Duration.ofSeconds(10)
-        );
-
-        driver.get(CommonData.get("url"));
-
-        waitForPageLoad();
-
-        Reporter.log("Application opened successfully", true);
     }
 
     protected void waitForPageLoad() {
-        wait.until(
-            webDriver -> "complete".equals(
-                ((JavascriptExecutor) webDriver)
-                    .executeScript("return document.readyState")
-            )
-        );
+        wait.until(webDriver -> "complete".equals(((JavascriptExecutor) webDriver).executeScript("return document.readyState")));
     }
 
     protected WebElement waitForVisible(By locator) {
-        return wait.until(
-            ExpectedConditions.visibilityOfElementLocated(locator)
-        );
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     protected WebElement waitForClickable(By locator) {
-        return wait.until(
-            ExpectedConditions.elementToBeClickable(locator)
-        );
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
     protected boolean waitForUrlContains(String value) {
-        return wait.until(
-            ExpectedConditions.urlContains(value)
-        );
+        return wait.until(ExpectedConditions.urlContains(value));
     }
 
     protected void waitForInvisibility(By locator) {
-        wait.until(
-            ExpectedConditions.invisibilityOfElementLocated(locator)
-        );
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
     protected void logReport(String message) {
@@ -150,15 +166,10 @@ public class BaseClass {
 
             if (driver != null) {
                 try {
-                    Screenshot.takeScreenshot(
-                        driver,
-                        testName + "_FAILED"
-                    );
-                } catch (Exception e) {
-                    Reporter.log(
-                        "Screenshot failed: " + e.getMessage(),
-                        true
-                    );
+                    Screenshot.takeScreenshot(driver,testName + "_FAILED");
+                } 
+                catch (Exception e) {
+                    Reporter.log("Screenshot failed: " + e.getMessage(),true);
                 }
             }
 
@@ -168,9 +179,14 @@ public class BaseClass {
         }
 
         if (driver != null) {
-            driver.quit();
-            driver = null;
-            wait = null;
+            try {
+                driver.quit();
+            } catch (Exception e) {
+                Reporter.log("Browser cleanup failed: " + e.getMessage(),true);
+            } finally {
+                driver = null;
+                wait = null;
+            }
         }
     }
 
