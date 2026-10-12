@@ -17,17 +17,6 @@ public class HamburgerMenuPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    public HamburgerMenuPage(WebDriver driver) {
-        if (driver == null) {
-            throw new IllegalArgumentException("WebDriver cannot be null");
-        }
-
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
-        PageFactory.initElements(driver, this);
-    }
-
     @FindBy(id = "react-burger-menu-btn")
     private WebElement menuButton;
 
@@ -45,6 +34,21 @@ public class HamburgerMenuPage {
 
     @FindBy(id = "reset_sidebar_link")
     private WebElement resetApp;
+
+    public HamburgerMenuPage(WebDriver driver) {
+        if (driver == null) {
+            throw new IllegalArgumentException(
+                "WebDriver cannot be null"
+            );
+        }
+
+        this.driver = driver;
+        this.wait = new WebDriverWait(
+            driver, Duration.ofSeconds(20)
+        );
+
+        PageFactory.initElements(driver, this);
+    }
 
     private boolean isMenuOpen() {
         return !driver.findElements(
@@ -89,6 +93,7 @@ public class HamburgerMenuPage {
 
     public boolean isAllItemsDisplayed() {
         openMenu();
+
         return wait.until(
             ExpectedConditions.visibilityOf(allItems)
         ).isDisplayed();
@@ -96,6 +101,7 @@ public class HamburgerMenuPage {
 
     public boolean isAboutDisplayed() {
         openMenu();
+
         return wait.until(
             ExpectedConditions.visibilityOf(about)
         ).isDisplayed();
@@ -103,6 +109,7 @@ public class HamburgerMenuPage {
 
     public boolean isLogoutDisplayed() {
         openMenu();
+
         return wait.until(
             ExpectedConditions.visibilityOf(logout)
         ).isDisplayed();
@@ -110,6 +117,7 @@ public class HamburgerMenuPage {
 
     public boolean isResetAppDisplayed() {
         openMenu();
+
         return wait.until(
             ExpectedConditions.visibilityOf(resetApp)
         ).isDisplayed();
@@ -147,8 +155,17 @@ public class HamburgerMenuPage {
         openMenu();
 
         wait.until(
-            ExpectedConditions.elementToBeClickable(logout)
+            ExpectedConditions.elementToBeClickable(
+                By.id("logout_sidebar_link")
+            )
         ).click();
+
+        // Verify that the login page is displayed.
+        wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                By.id("user-name")
+            )
+        );
 
         wait.until(
             ExpectedConditions.visibilityOfElementLocated(
@@ -166,7 +183,6 @@ public class HamburgerMenuPage {
             ExpectedConditions.elementToBeClickable(resetApp)
         ).click();
 
-        // SauceDemo normally stays on the inventory page.
         wait.until(
             ExpectedConditions.visibilityOfElementLocated(
                 By.id("react-burger-menu-btn")

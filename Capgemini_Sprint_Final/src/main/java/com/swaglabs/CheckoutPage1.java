@@ -43,32 +43,19 @@ public class CheckoutPage1 {
 
         this.driver = driver;
         this.wait = new WebDriverWait(
-            driver, Duration.ofSeconds(15)
+            driver, Duration.ofSeconds(20)
         );
 
         PageFactory.initElements(driver, this);
     }
 
-    // Enter checkout customer information
+    // Enter checkout customer information from properties
     public void enterDetails() {
-        enterValue(
-            firstNameField,
-            CommonData.get("firstName")
-        );
+        enterValue(firstNameField, CommonData.get("firstName"));
+        enterValue(lastNameField, CommonData.get("lastName"));
+        enterValue(postalCodeField, CommonData.get("postalCode"));
 
-        enterValue(
-            lastNameField,
-            CommonData.get("lastName")
-        );
-
-        enterValue(
-            postalCodeField,
-            CommonData.get("postalCode")
-        );
-
-        Reporter.log(
-            "Checkout details entered successfully", true
-        );
+        Reporter.log("Checkout details entered successfully", true);
     }
 
     private void enterValue(WebElement element, String value) {
@@ -78,20 +65,15 @@ public class CheckoutPage1 {
             );
         }
 
-        wait.until(
-            ExpectedConditions.visibilityOf(element)
-        );
-
+        wait.until(ExpectedConditions.visibilityOf(element));
         element.clear();
         element.sendKeys(value);
     }
 
-    // Submit checkout information and handle either outcome
+    // Submit checkout information
     public void clickContinue() {
         wait.until(
-            ExpectedConditions.elementToBeClickable(
-                continueButton
-            )
+            ExpectedConditions.elementToBeClickable(continueButton)
         ).click();
 
         wait.until(d ->
@@ -101,42 +83,47 @@ public class CheckoutPage1 {
             ).isEmpty()
         );
 
-        if (driver.getCurrentUrl().contains(
-                "checkout-step-two.html")) {
+        String currentUrl = driver.getCurrentUrl();
+        System.out.println("URL after Continue: " + currentUrl);
+
+        if (currentUrl.contains("checkout-step-two.html")) {
+            Reporter.log(
+                "Checkout information submitted successfully", true
+            );
+        } else {
+            String message = getErrorMessage();
 
             Reporter.log(
-                "Checkout information submitted successfully",
-                true
+                "Checkout validation error: " + message, true
             );
 
-        } else {
-            String message = driver.findElement(
-                By.cssSelector("[data-test='error']")
-            ).getText();
-
             throw new AssertionError(
-                "Checkout validation failed: " + message
+                "Checkout did not proceed. Validation message: " + message
             );
         }
     }
 
-    // Negative test: click Continue with empty fields
+    // Negative test: submit empty customer information
     public void continueWithoutEnteringDetails() {
         wait.until(
-            ExpectedConditions.elementToBeClickable(
-                continueButton
-            )
-        ).click();
+            ExpectedConditions.visibilityOf(firstNameField)
+        ).clear();
+
+        lastNameField.clear();
+        postalCodeField.clear();
 
         wait.until(
+            ExpectedConditions.elementToBeClickable(continueButton)
+        ).click();
+
+        String message = wait.until(
             ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("[data-test='error']")
             )
-        );
+        ).getText();
 
         Reporter.log(
-            "Checkout validation message displayed",
-            true
+            "Expected validation message: " + message, true
         );
     }
 
