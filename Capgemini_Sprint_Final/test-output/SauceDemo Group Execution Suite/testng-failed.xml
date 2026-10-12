@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [SauceDemo Group Execution Suite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" name="Smoke Tests(failed)">
+    <groups>
+      <run>
+        <include name="smoke"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="ecom.swaglabs.product.Product_Test_Script2">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifySortNameAToZ"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.product.Product_Test_Script2 -->
+      <class name="ecom.swaglabs.product.Product_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyAddProductToCart"/>
+          <include name="verifyProductPageLoads"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.product.Product_Test_Script1 -->
+      <class name="ecom.swaglabs.cart.Cart_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyProductInCart"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.cart.Cart_Test_Script1 -->
+      <class name="ecom.swaglabs.login.Login_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="validLoginTest"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.login.Login_Test_Script1 -->
+      <class name="ecom.swaglabs.hamburger.HamBurger_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyHamburgerMenu"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.hamburger.HamBurger_Test_Script1 -->
+    </classes>
+  </test> <!-- Smoke Tests(failed) -->
+  <test thread-count="5" name="Functional Tests(failed)">
+    <groups>
+      <run>
+        <include name="functional"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="ecom.swaglabs.product.Product_Test_Script2">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifySortNameZToA"/>
+          <include name="verifyPriceLowToHigh"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.product.Product_Test_Script2 -->
+      <class name="ecom.swaglabs.checkout.CheckOut_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyCheckoutInformationPage"/>
+          <include name="verifyCustomerInformationSubmission"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.checkout.CheckOut_Test_Script1 -->
+      <class name="ecom.swaglabs.product.Product_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyAddProductToCart"/>
+          <include name="verifyProductPageLoads"/>
+          <include name="beforeSuite"/>
+          <include name="verifyRemoveProduct"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.product.Product_Test_Script1 -->
+      <class name="ecom.swaglabs.cart.Cart_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyRemoveProductFromCart"/>
+          <include name="verifyProductInCart"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.cart.Cart_Test_Script1 -->
+      <class name="ecom.swaglabs.login.Login_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="validLoginTest"/>
+          <include name="invalidLoginTest"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="validProblemUserLoginTest"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.login.Login_Test_Script1 -->
+      <class name="ecom.swaglabs.hamburger.HamBurger_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifySpinnerClickable"/>
+          <include name="verifyDynamicCatalogDropdown"/>
+          <include name="verifyLazyLoadClickable"/>
+          <include name="verifySliderClickable"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.hamburger.HamBurger_Test_Script1 -->
+    </classes>
+  </test> <!-- Functional Tests(failed) -->
+  <test thread-count="5" name="Integration Tests(failed)">
+    <groups>
+      <run>
+        <include name="integration"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="ecom.swaglabs.cart.Cart_Test_Script2">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyContinueShopping"/>
+          <include name="beforeSuite"/>
+          <include name="verifyInventoryToCartIntegration"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.cart.Cart_Test_Script2 -->
+      <class name="ecom.swaglabs.cart.Cart_Test_Script3">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyCompleteCheckout"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.cart.Cart_Test_Script3 -->
+      <class name="ecom.swaglabs.checkout.CheckOut_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="verifyProductConsistencyInCheckout"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.checkout.CheckOut_Test_Script1 -->
+    </classes>
+  </test> <!-- Integration Tests(failed) -->
+  <test thread-count="5" name="System Tests(failed)">
+    <groups>
+      <run>
+        <include name="system"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="ecom.swaglabs.cart.Cart_Test_Script3">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyCompleteCheckout"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.cart.Cart_Test_Script3 -->
+      <class name="ecom.swaglabs.checkout.CheckOut_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="verifyCompleteCheckout"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.checkout.CheckOut_Test_Script1 -->
+    </classes>
+  </test> <!-- System Tests(failed) -->
+  <test thread-count="5" name="Negative Tests(failed)">
+    <groups>
+      <run>
+        <include name="negative"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="ecom.swaglabs.cart.Cart_Test_Script2">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyUnauthenticatedCart"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.cart.Cart_Test_Script2 -->
+      <class name="ecom.swaglabs.login.Login_Test_Script2">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="emptyCredentialsTest"/>
+          <include name="beforeSuite"/>
+          <include name="invalidUsernameTest"/>
+          <include name="afterClass"/>
+          <include name="invalidPasswordTest"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.login.Login_Test_Script2 -->
+      <class name="ecom.swaglabs.login.Login_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="invalidLoginTest"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.login.Login_Test_Script1 -->
+      <class name="ecom.swaglabs.checkout.CheckOut_Test_Script2">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyCheckoutWithBlankInformation"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.checkout.CheckOut_Test_Script2 -->
+      <class name="ecom.swaglabs.hamburger.HamBurger_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyUnavailableProductAction"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.hamburger.HamBurger_Test_Script1 -->
+    </classes>
+  </test> <!-- Negative Tests(failed) -->
+</suite> <!-- Failed suite [SauceDemo Group Execution Suite] -->

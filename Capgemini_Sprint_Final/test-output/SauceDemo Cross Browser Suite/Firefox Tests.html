@@ -1,0 +1,220 @@
+<html>
+<head>
+<title>TestNG:  Firefox Tests</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>Firefox Tests</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>28/0/0</td>
+</tr><tr>
+<td>Started on:</td><td>Fri Oct 09 00:21:13 IST 2026</td>
+</tr>
+<tr><td>Total time:</td><td>556 seconds (556867 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td></td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td><b>Attribute(s)</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='com.swaglabs.login.TS2.emptyCredentialsTest()'><b>emptyCredentialsTest</b><br>Test class: com.swaglabs.login.TS2</td>
+<td></td>
+<td>6</td>
+<td>com.swaglabs.login.TS2@e4487af</td></tr>
+<tr>
+<td title='com.swaglabs.hamburger.TS1.verifySliderClickable()'><b>verifySliderClickable</b><br>Test class: com.swaglabs.hamburger.TS1</td>
+<td></td>
+<td>23</td>
+<td>com.swaglabs.hamburger.TS1@4c309d4d</td></tr>
+<tr>
+<td title='com.swaglabs.product.TS2.verifySortNameZToA()'><b>verifySortNameZToA</b><br>Test class: com.swaglabs.product.TS2</td>
+<td></td>
+<td>8</td>
+<td>com.swaglabs.product.TS2@c86b9e3</td></tr>
+<tr>
+<td title='com.swaglabs.cart.TS2.verifyInventoryToCartIntegration()'><b>verifyInventoryToCartIntegration</b><br>Test class: com.swaglabs.cart.TS2</td>
+<td></td>
+<td>10</td>
+<td>com.swaglabs.cart.TS2@3af9c5b7</td></tr>
+<tr>
+<td title='com.swaglabs.hamburger.TS1.verifyLazyLoadClickable()'><b>verifyLazyLoadClickable</b><br>Test class: com.swaglabs.hamburger.TS1</td>
+<td></td>
+<td>23</td>
+<td>com.swaglabs.hamburger.TS1@4c309d4d</td></tr>
+<tr>
+<td title='com.swaglabs.checkout.TS1.verifyCompleteCheckout()'><b>verifyCompleteCheckout</b><br>Test class: com.swaglabs.checkout.TS1</td>
+<td></td>
+<td>23</td>
+<td>com.swaglabs.checkout.TS1@37271612</td></tr>
+<tr>
+<td title='com.swaglabs.checkout.TS1.verifyCustomerInformationSubmission()'><b>verifyCustomerInformationSubmission</b><br>Test class: com.swaglabs.checkout.TS1</td>
+<td></td>
+<td>21</td>
+<td>com.swaglabs.checkout.TS1@37271612</td></tr>
+<tr>
+<td title='com.swaglabs.hamburger.TS1.verifySpinnerClickable()'><b>verifySpinnerClickable</b><br>Test class: com.swaglabs.hamburger.TS1</td>
+<td></td>
+<td>23</td>
+<td>com.swaglabs.hamburger.TS1@4c309d4d</td></tr>
+<tr>
+<td title='com.swaglabs.product.TS2.verifySortNameAToZ()'><b>verifySortNameAToZ</b><br>Test class: com.swaglabs.product.TS2</td>
+<td></td>
+<td>8</td>
+<td>com.swaglabs.product.TS2@c86b9e3</td></tr>
+<tr>
+<td title='com.swaglabs.cart.TS2.verifyUnauthenticatedCart()'><b>verifyUnauthenticatedCart</b><br>Test class: com.swaglabs.cart.TS2</td>
+<td></td>
+<td>2</td>
+<td>com.swaglabs.cart.TS2@3af9c5b7</td></tr>
+<tr>
+<td title='com.swaglabs.login.TS1.validProblemUserLoginTest()'><b>validProblemUserLoginTest</b><br>Test class: com.swaglabs.login.TS1</td>
+<td></td>
+<td>6</td>
+<td>com.swaglabs.login.TS1@687e99d8</td></tr>
+<tr>
+<td title='com.swaglabs.login.TS1.invalidLoginTest()'><b>invalidLoginTest</b><br>Test class: com.swaglabs.login.TS1</td>
+<td></td>
+<td>6</td>
+<td>com.swaglabs.login.TS1@687e99d8</td></tr>
+<tr>
+<td title='com.swaglabs.product.TS1.verifyProductPageLoads()'><b>verifyProductPageLoads</b><br>Test class: com.swaglabs.product.TS1</td>
+<td></td>
+<td>6</td>
+<td>com.swaglabs.product.TS1@6aaceffd</td></tr>
+<tr>
+<td title='com.swaglabs.product.TS1.verifyAddProductToCart()'><b>verifyAddProductToCart</b><br>Test class: com.swaglabs.product.TS1</td>
+<td></td>
+<td>8</td>
+<td>com.swaglabs.product.TS1@6aaceffd</td></tr>
+<tr>
+<td title='com.swaglabs.product.TS2.verifyPriceLowToHigh()'><b>verifyPriceLowToHigh</b><br>Test class: com.swaglabs.product.TS2</td>
+<td></td>
+<td>8</td>
+<td>com.swaglabs.product.TS2@c86b9e3</td></tr>
+<tr>
+<td title='com.swaglabs.cart.TS1.verifyRemoveProductFromCart()'><b>verifyRemoveProductFromCart</b><br>Test class: com.swaglabs.cart.TS1</td>
+<td></td>
+<td>23</td>
+<td>com.swaglabs.cart.TS1@10aa41f2</td></tr>
+<tr>
+<td title='com.swaglabs.login.TS2.invalidPasswordTest()'><b>invalidPasswordTest</b><br>Test class: com.swaglabs.login.TS2</td>
+<td></td>
+<td>6</td>
+<td>com.swaglabs.login.TS2@e4487af</td></tr>
+<tr>
+<td title='com.swaglabs.login.TS2.invalidUsernameTest()'><b>invalidUsernameTest</b><br>Test class: com.swaglabs.login.TS2</td>
+<td></td>
+<td>6</td>
+<td>com.swaglabs.login.TS2@e4487af</td></tr>
+<tr>
+<td title='com.swaglabs.hamburger.TS1.verifyDynamicCatalogDropdown()'><b>verifyDynamicCatalogDropdown</b><br>Test class: com.swaglabs.hamburger.TS1</td>
+<td></td>
+<td>21</td>
+<td>com.swaglabs.hamburger.TS1@4c309d4d</td></tr>
+<tr>
+<td title='com.swaglabs.login.TS1.validLoginTest()'><b>validLoginTest</b><br>Test class: com.swaglabs.login.TS1</td>
+<td></td>
+<td>6</td>
+<td>com.swaglabs.login.TS1@687e99d8</td></tr>
+<tr>
+<td title='com.swaglabs.hamburger.TS1.verifyHamburgerMenu()'><b>verifyHamburgerMenu</b><br>Test class: com.swaglabs.hamburger.TS1</td>
+<td></td>
+<td>8</td>
+<td>com.swaglabs.hamburger.TS1@4c309d4d</td></tr>
+<tr>
+<td title='com.swaglabs.checkout.TS1.verifyProductConsistencyInCheckout()'><b>verifyProductConsistencyInCheckout</b><br>Test class: com.swaglabs.checkout.TS1</td>
+<td></td>
+<td>21</td>
+<td>com.swaglabs.checkout.TS1@37271612</td></tr>
+<tr>
+<td title='com.swaglabs.checkout.TS2.verifyCheckoutWithBlankInformation()'><b>verifyCheckoutWithBlankInformation</b><br>Test class: com.swaglabs.checkout.TS2</td>
+<td></td>
+<td>15</td>
+<td>com.swaglabs.checkout.TS2@ed7f8b4</td></tr>
+<tr>
+<td title='com.swaglabs.product.TS1.verifyRemoveProduct()'><b>verifyRemoveProduct</b><br>Test class: com.swaglabs.product.TS1</td>
+<td></td>
+<td>10</td>
+<td>com.swaglabs.product.TS1@6aaceffd</td></tr>
+<tr>
+<td title='com.swaglabs.cart.TS1.verifyProductInCart()'><b>verifyProductInCart</b><br>Test class: com.swaglabs.cart.TS1</td>
+<td></td>
+<td>10</td>
+<td>com.swaglabs.cart.TS1@10aa41f2</td></tr>
+<tr>
+<td title='com.swaglabs.hamburger.TS1.verifyUnavailableProductAction()'><b>verifyUnavailableProductAction</b><br>Test class: com.swaglabs.hamburger.TS1</td>
+<td></td>
+<td>8</td>
+<td>com.swaglabs.hamburger.TS1@4c309d4d</td></tr>
+<tr>
+<td title='com.swaglabs.cart.TS2.verifyContinueShopping()'><b>verifyContinueShopping</b><br>Test class: com.swaglabs.cart.TS2</td>
+<td></td>
+<td>12</td>
+<td>com.swaglabs.cart.TS2@3af9c5b7</td></tr>
+<tr>
+<td title='com.swaglabs.checkout.TS1.verifyCheckoutInformationPage()'><b>verifyCheckoutInformationPage</b><br>Test class: com.swaglabs.checkout.TS1</td>
+<td></td>
+<td>12</td>
+<td>com.swaglabs.checkout.TS1@37271612</td></tr>
+</table><p>
+</body>
+</html>

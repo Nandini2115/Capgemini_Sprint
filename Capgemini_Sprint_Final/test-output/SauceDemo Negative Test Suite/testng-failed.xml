@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [SauceDemo Negative Test Suite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" name="All Negative Tests(failed)">
+    <groups>
+      <run>
+        <include name="negative"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="ecom.swaglabs.checkout.CheckOut_Test_Script2">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyCheckoutWithBlankInformation"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.checkout.CheckOut_Test_Script2 -->
+      <class name="ecom.swaglabs.hamburger.HamBurger_Test_Script1">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyUnavailableProductAction"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.hamburger.HamBurger_Test_Script1 -->
+      <class name="ecom.swaglabs.login.Login_Test_Script2">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="emptyCredentialsTest"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="invalidUsernameTest"/>
+          <include name="invalidPasswordTest"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+          <include name="beforeTest"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.login.Login_Test_Script2 -->
+      <class name="ecom.swaglabs.cart.Cart_Test_Script2">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="verifyUnauthenticatedCart"/>
+          <include name="beforeSuite"/>
+          <include name="afterClass"/>
+          <include name="tearDown"/>
+          <include name="beforeTest"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- ecom.swaglabs.cart.Cart_Test_Script2 -->
+    </classes>
+  </test> <!-- All Negative Tests(failed) -->
+</suite> <!-- Failed suite [SauceDemo Negative Test Suite] -->
