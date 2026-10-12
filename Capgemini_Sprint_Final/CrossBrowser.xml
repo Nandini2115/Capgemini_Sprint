@@ -12,7 +12,7 @@
             <class name="ecom.swaglabs.login.Login_Test_Script2"/>
 
             <class name="ecom.swaglabs.product.Product_Test_Script1"/>
-            <class name="com.swaglabs.product.Product_Test_Script2"/>
+            <class name="ecom.swaglabs.product.Product_Test_Script2"/>
 
             <class name="ecom.swaglabs.cart.Cart_Test_Script1"/>
             <class name="ecom.swaglabs.cart.Cart_Test_Script2"/>
