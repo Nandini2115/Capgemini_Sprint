@@ -20,6 +20,9 @@ public class HamburgerMenuPage {
     private final By closeMenuButton =
             By.id("react-burger-cross-btn");
 
+    private final By menuPanel =
+            By.className("bm-menu");
+
     private final By allItemsLink =
             By.id("inventory_sidebar_link");
 
@@ -47,6 +50,11 @@ public class HamburgerMenuPage {
     }
 
     public void openMenu() {
+        // Do not click the hamburger button if the menu is already open.
+        if (isMenuOpen()) {
+            return;
+        }
+
         wait.until(
                 ExpectedConditions.elementToBeClickable(menuButton))
                 .click();
@@ -57,13 +65,24 @@ public class HamburgerMenuPage {
         Reporter.log("Hamburger menu opened", true);
     }
 
+    private boolean isMenuOpen() {
+        return !driver.findElements(logoutLink).isEmpty()
+                && driver.findElement(logoutLink).isDisplayed();
+    }
+
     public void closeMenu() {
+        if (!isMenuOpen()) {
+            return;
+        }
+
         wait.until(
                 ExpectedConditions.elementToBeClickable(closeMenuButton))
                 .click();
 
         wait.until(
-                ExpectedConditions.invisibilityOfElementLocated(logoutLink));
+                ExpectedConditions.invisibilityOfElementLocated(menuPanel));
+
+        Reporter.log("Hamburger menu closed", true);
     }
 
     public boolean isAllItemsDisplayed() {
@@ -99,7 +118,7 @@ public class HamburgerMenuPage {
                 .isDisplayed();
     }
 
-    // Compatibility with the existing TestNG test method name
+    // Keeps compatibility with the existing TestNG test method.
     public boolean isResetAppDisplayed() {
         return isResetAppStateDisplayed();
     }
