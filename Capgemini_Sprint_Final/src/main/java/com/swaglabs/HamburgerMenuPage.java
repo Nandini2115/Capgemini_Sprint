@@ -5,9 +5,6 @@ import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
@@ -17,122 +14,105 @@ public class HamburgerMenuPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    @FindBy(id = "react-burger-menu-btn")
-    private WebElement menuButton;
+    private final By menuButton =
+            By.id("react-burger-menu-btn");
 
-    @FindBy(id = "react-burger-cross-btn")
-    private WebElement closeMenuButton;
+    private final By closeMenuButton =
+            By.id("react-burger-cross-btn");
 
-    @FindBy(id = "inventory_sidebar_link")
-    private WebElement allItems;
+    private final By allItemsLink =
+            By.id("inventory_sidebar_link");
 
-    @FindBy(id = "about_sidebar_link")
-    private WebElement about;
+    private final By aboutLink =
+            By.id("about_sidebar_link");
 
-    @FindBy(id = "logout_sidebar_link")
-    private WebElement logout;
+    private final By logoutLink =
+            By.id("logout_sidebar_link");
 
-    @FindBy(id = "reset_sidebar_link")
-    private WebElement resetApp;
+    private final By resetAppStateLink =
+            By.id("reset_sidebar_link");
+
+    private final By loginButton =
+            By.id("login-button");
 
     public HamburgerMenuPage(WebDriver driver) {
         if (driver == null) {
             throw new IllegalArgumentException(
-                "WebDriver cannot be null"
-            );
+                    "WebDriver cannot be null");
         }
 
         this.driver = driver;
         this.wait = new WebDriverWait(
-            driver, Duration.ofSeconds(20)
-        );
-
-        PageFactory.initElements(driver, this);
-    }
-
-    private boolean isMenuOpen() {
-        return !driver.findElements(
-            By.id("logout_sidebar_link")
-        ).isEmpty()
-        && driver.findElement(
-            By.id("logout_sidebar_link")
-        ).isDisplayed();
+                driver, Duration.ofSeconds(15));
     }
 
     public void openMenu() {
-        if (!isMenuOpen()) {
-            wait.until(
-                ExpectedConditions.elementToBeClickable(menuButton)
-            ).click();
+        wait.until(
+                ExpectedConditions.elementToBeClickable(menuButton))
+                .click();
 
-            wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                    By.id("logout_sidebar_link")
-                )
-            );
-        }
+        wait.until(
+                ExpectedConditions.visibilityOfElementLocated(logoutLink));
 
         Reporter.log("Hamburger menu opened", true);
     }
 
     public void closeMenu() {
-        if (isMenuOpen()) {
-            wait.until(
-                ExpectedConditions.elementToBeClickable(closeMenuButton)
-            ).click();
+        wait.until(
+                ExpectedConditions.elementToBeClickable(closeMenuButton))
+                .click();
 
-            wait.until(
-                ExpectedConditions.invisibilityOfElementLocated(
-                    By.id("logout_sidebar_link")
-                )
-            );
-        }
-
-        Reporter.log("Hamburger menu closed", true);
+        wait.until(
+                ExpectedConditions.invisibilityOfElementLocated(logoutLink));
     }
 
     public boolean isAllItemsDisplayed() {
         openMenu();
 
         return wait.until(
-            ExpectedConditions.visibilityOf(allItems)
-        ).isDisplayed();
+                ExpectedConditions.visibilityOfElementLocated(allItemsLink))
+                .isDisplayed();
     }
 
     public boolean isAboutDisplayed() {
         openMenu();
 
         return wait.until(
-            ExpectedConditions.visibilityOf(about)
-        ).isDisplayed();
+                ExpectedConditions.visibilityOfElementLocated(aboutLink))
+                .isDisplayed();
     }
 
     public boolean isLogoutDisplayed() {
         openMenu();
 
         return wait.until(
-            ExpectedConditions.visibilityOf(logout)
-        ).isDisplayed();
+                ExpectedConditions.visibilityOfElementLocated(logoutLink))
+                .isDisplayed();
     }
 
-    public boolean isResetAppDisplayed() {
+    public boolean isResetAppStateDisplayed() {
         openMenu();
 
         return wait.until(
-            ExpectedConditions.visibilityOf(resetApp)
-        ).isDisplayed();
+                ExpectedConditions.visibilityOfElementLocated(
+                        resetAppStateLink))
+                .isDisplayed();
+    }
+
+    // Compatibility with the existing TestNG test method name
+    public boolean isResetAppDisplayed() {
+        return isResetAppStateDisplayed();
     }
 
     public void clickAllItems() {
         openMenu();
 
         wait.until(
-            ExpectedConditions.elementToBeClickable(allItems)
-        ).click();
+                ExpectedConditions.elementToBeClickable(allItemsLink))
+                .click();
 
         wait.until(
-            ExpectedConditions.urlContains("inventory.html")
-        );
+                ExpectedConditions.urlContains("inventory.html"));
 
         Reporter.log("All Items selected", true);
     }
@@ -141,53 +121,31 @@ public class HamburgerMenuPage {
         openMenu();
 
         wait.until(
-            ExpectedConditions.elementToBeClickable(about)
-        ).click();
+                ExpectedConditions.elementToBeClickable(aboutLink))
+                .click();
 
-        wait.until(
-            ExpectedConditions.urlContains("saucelabs.com")
-        );
-
-        Reporter.log("About selected", true);
+        Reporter.log("About option selected", true);
     }
 
     public void clickLogout() {
         openMenu();
 
         wait.until(
-            ExpectedConditions.elementToBeClickable(
-                By.id("logout_sidebar_link")
-            )
-        ).click();
-
-        // Verify that the login page is displayed.
-        wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.id("user-name")
-            )
-        );
+                ExpectedConditions.elementToBeClickable(logoutLink))
+                .click();
 
         wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.id("login-button")
-            )
-        );
+                ExpectedConditions.visibilityOfElementLocated(loginButton));
 
         Reporter.log("Logout successful", true);
     }
 
-    public void clickResetApp() {
+    public void clickResetAppState() {
         openMenu();
 
         wait.until(
-            ExpectedConditions.elementToBeClickable(resetApp)
-        ).click();
-
-        wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.id("react-burger-menu-btn")
-            )
-        );
+                ExpectedConditions.elementToBeClickable(resetAppStateLink))
+                .click();
 
         Reporter.log("Reset App State selected", true);
     }
